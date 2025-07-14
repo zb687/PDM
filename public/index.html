@@ -523,31 +523,69 @@
     </div>
 
     <script>
-        // Load products and columns on page load
-        loadProducts();
-        loadColumns();
-
-        // API base URL - change this for production
-        const API_BASE = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+        // API base URL - uses same domain as frontend
+        const API_BASE = '';
 
         // Column definitions
         let allColumns = {};
 
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, initializing...');
+            loadColumns();
+            loadProducts();
+        });
+
+        // Test function to verify API connection
+        async function testAPI() {
+            try {
+                console.log('Testing API connection...');
+                const response = await fetch('/health');
+                console.log('Health check response:', response);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('API Response:', data);
+                showMessage('API is working! ' + JSON.stringify(data), 'success');
+                return true;
+            } catch (error) {
+                console.error('API Test failed:', error);
+                showMessage('API Error: ' + error.message, 'error');
+                return false;
+            }
+        }
+
         // Load column definitions
         async function loadColumns() {
             try {
+                console.log('Loading columns...');
                 const response = await fetch(`${API_BASE}/api/columns`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const data = await response.json();
+                console.log('Columns loaded:', data);
                 allColumns = data.all;
                 updateTableHeaders();
             } catch (error) {
                 console.error('Error loading columns:', error);
+                showMessage('Error loading columns: ' + error.message, 'error');
             }
         }
 
         // Update table headers based on available columns
         function updateTableHeaders() {
             const thead = document.querySelector('#productsTable thead tr');
+            if (!thead) {
+                console.error('Table header not found');
+                return;
+            }
+            
             thead.innerHTML = '<th>Actions</th>';
             
             Object.keys(allColumns).forEach(column => {
@@ -555,10 +593,722 @@
                 th.textContent = column.replace(/_/g, ' ').toUpperCase();
                 thead.appendChild(th);
             });
+            
+            console.log('Table headers updated');
+        }
+
+        // Load products from backend
+        async function loadProducts() {
+            try {
+                console.log('Loading products...');
+                const response = await fetch(`${API_BASE}/api/products`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const products = await response.json();
+                console.log('Products loaded:', products);
+                displayProducts(products);
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showMessage('Error loading products: ' + error.message, 'error');
+            }
+        }
+
+        // Display products in table
+        function displayProducts(products) {
+            const tbody = document.querySelector('#productsTable tbody');
+            if (!tbody) {
+                console.error('Table body not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                
+                // Actions cell
+                const actionsCell = document.createElement('td');
+                actionsCell.innerHTML = `
+                    <button onclick="editProduct('${product.item}')" class="edit-btn" title="Edit">✏️</button>
+                    <button onclick="deleteProduct('${product.item}')" class="delete-btn" title="Delete">🗑️</button>
+                `;
+                row.appendChild(actionsCell);
+
+                // Data cells based on available columns
+                Object.keys(allColumns).forEach(column => {
+                    const cell = document.createElement('td');
+                    let value = product[column] || '';
+                    
+                    // Format specific columns
+                    if (column === 'unit_price' && value) {
+                        value = '
+            const sampleData = [
+                { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2500, um2: "EA" },
+                { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 500.0000, onorder: 0.0000, unit_price: 0.6402, um2: "EA" },
+                { item: "CG-49767", description: "5\" 220GRIT PSA DISC", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" },
+                { item: "CG-49800", description: "5\" PSA 320G DWT", grp_sect: "1/3", onhand: 800.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" },
+                { item: "CG-49798", description: "5 240GRIT GOLD PSA DISC", grp_sect: "1/3", onhand: 700.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2100, um2: "EA" }
+            ];
+
+            // Save sample data via API
+            sampleData.forEach(async (product) => {
+                try {
+                    await fetch(`${API_BASE}/api/products`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(product)
+                    });
+                } catch (error) {
+                    console.error('Error saving sample product:', error);
+                }
+            });
+
+            // Reload products after saving sample data
+            setTimeout(() => {
+                loadProducts();
+                showMessage('Sample data loaded successfully!', 'success');
+            }, 1000);
+        }
+
+        // Load products from backend
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/api/products`);
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showMessage('Error loading products', 'error');
+            }
+        }
+
+        // Display products in table
+        function displayProducts(products) {
+            const tbody = document.querySelector('#productsTable tbody');
+            tbody.innerHTML = '';
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                
+                // Actions cell
+                const actionsCell = document.createElement('td');
+                actionsCell.innerHTML = `
+                    <button onclick="editProduct('${product.item}')" class="edit-btn" title="Edit">✏️</button>
+                    <button onclick="deleteProduct('${product.item}')" class="delete-btn" title="Delete">🗑️</button>
+                `;
+                row.appendChild(actionsCell);
+
+                // Data cells based on available columns
+                Object.keys(allColumns).forEach(column => {
+                    const cell = document.createElement('td');
+                    let value = product[column] || '';
+                    
+                    // Format specific columns
+                    if (column === 'unit_price' && value) {
+                        value = ' + parseFloat(value).toFixed(4);
+                    } else if (['onhand', 'committed', 'onorder'].includes(column) && value) {
+                        value = parseFloat(value).toFixed(4);
+                    }
+                    
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                tbody.appendChild(row);
+            });
+
+            // Update product count
+            document.getElementById('productCount').textContent = `${products.length}`;
+        }
+
+        // Open new product modal
+        function openModal() {
+            // Generate form fields based on available columns
+            const formContainer = document.getElementById('productForm');
+            formContainer.innerHTML = '';
+            
+            Object.keys(allColumns).forEach(column => {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                
+                const label = document.createElement('label');
+                label.textContent = column.replace(/_/g, ' ').toUpperCase() + ':';
+                label.setAttribute('for', column);
+                
+                let input;
+                if (['onhand', 'committed', 'onorder', 'unit_price'].includes(column)) {
+                    input = document.createElement('input');
+                    input.type = 'number';
+                    input.step = '0.0001';
+                    input.min = '0';
+                } else if (column === 'description') {
+                    input = document.createElement('textarea');
+                    input.rows = 2;
+                } else {
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    if (column === 'item') {
+                        input.maxLength = 16;
+                        input.required = true;
+                    } else if (['grp_sect', 'um', 'um2'].includes(column)) {
+                        input.maxLength = 6;
+                    }
+                }
+                
+                input.name = column;
+                input.id = column;
+                
+                div.appendChild(label);
+                div.appendChild(input);
+                formContainer.appendChild(div);
+            });
+            
+            // Add save and cancel buttons
+            const buttonDiv = document.createElement('div');
+            buttonDiv.className = 'action-row';
+            buttonDiv.innerHTML = `
+                <button type="button" class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
+            `;
+            formContainer.appendChild(buttonDiv);
+            
+            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Save product
+        async function saveProduct() {
+            const formData = new FormData(document.getElementById('productForm'));
+            const data = {};
+            
+            // Convert FormData to object, handling all columns
+            for (const [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    // Convert numeric fields
+                    if (['onhand', 'committed', 'onorder', 'unit_price'].includes(key)) {
+                        data[key] = parseFloat(value) || 0;
+                    } else {
+                        data[key] = value.trim();
+                    }
+                }
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage(result.message, 'success');
+                    closeModal();
+                    loadProducts();
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showMessage('Error saving product', 'error');
+            }
+        }
+
+        // Edit product
+        async function editProduct(item) {
+            try {
+                const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`);
+                const product = await response.json();
+                
+                if (response.ok) {
+                    // Populate form with product data
+                    const form = document.getElementById('productForm');
+                    
+                    // Clear form first
+                    form.reset();
+                    
+                    // Fill in available data
+                    Object.keys(allColumns).forEach(column => {
+                        const input = form.querySelector(`[name="${column}"]`);
+                        if (input && product[column] !== undefined) {
+                            input.value = product[column];
+                        }
+                    });
+                    
+                    document.getElementById('modalTitle').textContent = 'Edit Product';
+                    document.getElementById('modal').style.display = 'block';
+                } else {
+                    showMessage(product.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showMessage('Error loading product', 'error');
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(item) {
+            if (confirm(`Are you sure you want to delete product ${item}?`)) {
+                try {
+                    const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`, {
+                        method: 'DELETE'
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(result.message, 'success');
+                        loadProducts();
+                    } else {
+                        showMessage(result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    showMessage('Error deleting product', 'error');
+                }
+            }
+        }
+
+        // Import from paste
+        async function importFromPaste() {
+            const data = document.getElementById('pasteData').value.trim();
+            if (!data) {
+                showMessage('Please paste some data first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/import/paste`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        data: data,
+                        delimiter: '\t' 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    let message = `Import completed! ${result.imported} products imported.`;
+                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
+                        message += ` New columns added: ${result.newColumnsAdded.join(', ')}`;
+                    }
+                    if (result.errors && result.errors.length > 0) {
+                        message += ` ${result.errors.length} errors occurred.`;
+                        console.log('Import errors:', result.errors);
+                    }
+                    showMessage(message, 'success');
+                    document.getElementById('pasteData').value = '';
+                    loadProducts();
+                    loadColumns(); // Refresh columns in case new ones were added
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error importing data:', error);
+                showMessage('Error importing data', 'error');
+            }
+        }
+
+        // Import from file
+        async function importFromFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showMessage('Please select a file first', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(`${API_BASE}/api/import/file`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    let message = `Import completed! ${result.imported} products imported.`;
+                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
+                        message += ` New columns added: ${result.newColumnsAdded.join(', ')}`;
+                    }
+                    if (result.errors && result.errors.length > 0) {
+                        message += ` ${result.errors.length} errors occurred.`;
+                        console.log('Import errors:', result.errors);
+                    }
+                    showMessage(message, 'success');
+                    fileInput.value = '';
+                    loadProducts();
+                    loadColumns(); // Refresh columns in case new ones were added
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error importing file:', error);
+                showMessage('Error importing file', 'error');
+            }
+        }
+
+        // Export data
+        function exportData(format) {
+            window.open(`${API_BASE}/api/export/${format}`, '_blank');
+        }
+
+        // Show message
+        function showMessage(text, type = 'success') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html> + parseFloat(value).toFixed(4);
+                    } else if (['onhand', 'committed', 'onorder'].includes(column) && value) {
+                        value = parseFloat(value).toFixed(4);
+                    }
+                    
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                tbody.appendChild(row);
+            });
+
+            // Update product count
+            const countElement = document.getElementById('productCount');
+            if (countElement) {
+                countElement.textContent = `${products.length}`;
+            }
         }
 
         // Load and display sample data
         function loadSampleData() {
+            const sampleData = [
+                { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2500, um2: "EA" },
+                { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 500.0000, onorder: 0.0000, unit_price: 0.6402, um2: "EA" },
+                { item: "CG-49767", description: "5\" 220GRIT PSA DISC", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" }
+            ];
+
+            // Save sample data via API
+            let saved = 0;
+            sampleData.forEach(async (product) => {
+                try {
+                    await fetch(`${API_BASE}/api/products`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(product)
+                    });
+                    saved++;
+                    if (saved === sampleData.length) {
+                        setTimeout(() => {
+                            loadProducts();
+                            showMessage('Sample data loaded successfully!', 'success');
+                        }, 1000);
+                    }
+                } catch (error) {
+                    console.error('Error saving sample product:', error);
+                }
+            });
+        }
+
+        // Open new product modal
+        function openModal() {
+            // Generate form fields based on available columns
+            const formContainer = document.getElementById('productForm');
+            if (!formContainer) {
+                console.error('Product form not found');
+                return;
+            }
+            
+            formContainer.innerHTML = '';
+            
+            Object.keys(allColumns).forEach(column => {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                
+                const label = document.createElement('label');
+                label.textContent = column.replace(/_/g, ' ').toUpperCase() + ':';
+                label.setAttribute('for', column);
+                
+                let input;
+                if (['onhand', 'committed', 'onorder', 'unit_price'].includes(column)) {
+                    input = document.createElement('input');
+                    input.type = 'number';
+                    input.step = '0.0001';
+                    input.min = '0';
+                } else if (column === 'description') {
+                    input = document.createElement('textarea');
+                    input.rows = 2;
+                } else {
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    if (column === 'item') {
+                        input.maxLength = 16;
+                        input.required = true;
+                    } else if (['grp_sect', 'um', 'um2'].includes(column)) {
+                        input.maxLength = 6;
+                    }
+                }
+                
+                input.name = column;
+                input.id = column;
+                
+                div.appendChild(label);
+                div.appendChild(input);
+                formContainer.appendChild(div);
+            });
+            
+            // Add save and cancel buttons
+            const buttonDiv = document.createElement('div');
+            buttonDiv.className = 'action-row';
+            buttonDiv.innerHTML = `
+                <button type="button" class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
+            `;
+            formContainer.appendChild(buttonDiv);
+            
+            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('modal').style.display = 'block';
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Save product
+        async function saveProduct() {
+            const form = document.getElementById('productForm');
+            if (!form) {
+                console.error('Product form not found');
+                return;
+            }
+            
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Convert FormData to object
+            for (const [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    // Convert numeric fields
+                    if (['onhand', 'committed', 'onorder', 'unit_price'].includes(key)) {
+                        data[key] = parseFloat(value) || 0;
+                    } else {
+                        data[key] = value.trim();
+                    }
+                }
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/products`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showMessage(result.message, 'success');
+                    closeModal();
+                    loadProducts();
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error saving product:', error);
+                showMessage('Error saving product: ' + error.message, 'error');
+            }
+        }
+
+        // Edit product
+        async function editProduct(item) {
+            try {
+                const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`);
+                const product = await response.json();
+                
+                if (response.ok) {
+                    // First open the modal to generate form fields
+                    openModal();
+                    
+                    // Wait a bit for the form to be created
+                    setTimeout(() => {
+                        // Fill in available data
+                        Object.keys(allColumns).forEach(column => {
+                            const input = document.querySelector(`[name="${column}"]`);
+                            if (input && product[column] !== undefined) {
+                                input.value = product[column];
+                            }
+                        });
+                        
+                        document.getElementById('modalTitle').textContent = 'Edit Product';
+                    }, 100);
+                } else {
+                    showMessage(product.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading product:', error);
+                showMessage('Error loading product: ' + error.message, 'error');
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(item) {
+            if (confirm('Are you sure you want to delete product ' + item + '?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`, {
+                        method: 'DELETE'
+                    });
+
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(result.message, 'success');
+                        loadProducts();
+                    } else {
+                        showMessage(result.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting product:', error);
+                    showMessage('Error deleting product: ' + error.message, 'error');
+                }
+            }
+        }
+
+        // Import from paste
+        async function importFromPaste() {
+            const pasteArea = document.getElementById('pasteData');
+            if (!pasteArea) {
+                console.error('Paste area not found');
+                return;
+            }
+            
+            const data = pasteArea.value.trim();
+            if (!data) {
+                showMessage('Please paste some data first', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/import/paste`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        data: data,
+                        delimiter: '\t' 
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    let message = 'Import completed! ' + result.imported + ' products imported.';
+                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
+                        message += ' New columns added: ' + result.newColumnsAdded.join(', ');
+                    }
+                    if (result.errors && result.errors.length > 0) {
+                        message += ' ' + result.errors.length + ' errors occurred.';
+                        console.log('Import errors:', result.errors);
+                    }
+                    showMessage(message, 'success');
+                    pasteArea.value = '';
+                    loadProducts();
+                    loadColumns(); // Refresh columns in case new ones were added
+                } else {
+                    showMessage(result.error, 'error');
+                }
+            } catch (error) {
+                console.error('Error importing data:', error);
+                showMessage('Error importing data: ' + error.message, 'error');
+            }
+        }
+
+        // Import from file (disabled)
+        function importFromFile() {
+            showMessage('File upload is temporarily disabled. Please copy data from Excel and use paste import instead.', 'error');
+        }
+
+        // Export data
+        function exportData(format) {
+            window.open(`${API_BASE}/api/export/${format}`, '_blank');
+        }
+
+        // Show message
+        function showMessage(text, type = 'success') {
+            const messageDiv = document.getElementById('message');
+            if (messageDiv) {
+                messageDiv.textContent = text;
+                messageDiv.className = 'message ' + type;
+                messageDiv.style.display = 'block';
+                
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Make functions globally available
+        window.loadProducts = loadProducts;
+        window.loadSampleData = loadSampleData;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.saveProduct = saveProduct;
+        window.editProduct = editProduct;
+        window.deleteProduct = deleteProduct;
+        window.importFromPaste = importFromPaste;
+        window.importFromFile = importFromFile;
+        window.exportData = exportData;
+        window.testAPI = testAPI;
             const sampleData = [
                 { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2500, um2: "EA" },
                 { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 500.0000, onorder: 0.0000, unit_price: 0.6402, um2: "EA" },
