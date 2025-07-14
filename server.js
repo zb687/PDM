@@ -30,14 +30,15 @@ const coreColumns = {
   um2: 'TEXT'
 };
 
+// Dynamic columns storage
+let dynamicColumns = {};
+
 // Initialize database files
 function initializeDatabase() {
-  // Initialize products file
   if (!fs.existsSync(DB_FILE)) {
     fs.writeFileSync(DB_FILE, JSON.stringify([], null, 2));
   }
   
-  // Initialize columns file
   if (!fs.existsSync(COLUMNS_FILE)) {
     fs.writeFileSync(COLUMNS_FILE, JSON.stringify({}, null, 2));
   }
@@ -45,7 +46,7 @@ function initializeDatabase() {
   console.log('Database initialized.');
 }
 
-// Read/Write functions
+// Database functions
 function readProducts() {
   try {
     const data = fs.readFileSync(DB_FILE, 'utf8');
@@ -86,15 +87,11 @@ function writeColumns(columns) {
   }
 }
 
-// Dynamic columns storage
-let dynamicColumns = {};
-
 function loadDynamicColumns() {
   dynamicColumns = readColumns();
   console.log('Loaded dynamic columns:', dynamicColumns);
 }
 
-// Add new column
 function addColumn(columnName, columnType = 'TEXT') {
   const sanitizedName = columnName.toLowerCase().replace(/[^a-z0-9_]/g, '_');
   
@@ -112,18 +109,15 @@ function addColumn(columnName, columnType = 'TEXT') {
   }
 }
 
-// Get all columns
 function getAllColumns() {
   return { ...coreColumns, ...dynamicColumns };
 }
 
-// Initialize database
+// Initialize
 initializeDatabase();
 loadDynamicColumns();
 
 // Routes
-
-// Get all products
 app.get('/api/products', (req, res) => {
   try {
     const products = readProducts();
@@ -133,7 +127,6 @@ app.get('/api/products', (req, res) => {
   }
 });
 
-// Get single product
 app.get('/api/products/:item', (req, res) => {
   try {
     const products = readProducts();
@@ -149,7 +142,6 @@ app.get('/api/products/:item', (req, res) => {
   }
 });
 
-// Create or update product
 app.post('/api/products', (req, res) => {
   const data = req.body;
   
@@ -185,7 +177,6 @@ app.post('/api/products', (req, res) => {
   }
 });
 
-// Delete product
 app.delete('/api/products/:item', (req, res) => {
   try {
     const products = readProducts();
@@ -204,7 +195,6 @@ app.delete('/api/products/:item', (req, res) => {
   }
 });
 
-// Get column definitions
 app.get('/api/columns', (req, res) => {
   res.json({
     core: coreColumns,
@@ -213,7 +203,6 @@ app.get('/api/columns', (req, res) => {
   });
 });
 
-// Add new column
 app.post('/api/columns', (req, res) => {
   const { columnName, columnType = 'TEXT' } = req.body;
   
@@ -237,7 +226,6 @@ app.post('/api/columns', (req, res) => {
   }
 });
 
-// Import from paste data (no file upload)
 app.post('/api/import/paste', (req, res) => {
   const { data, delimiter = '\t' } = req.body;
   
@@ -279,7 +267,7 @@ app.post('/api/import/paste', (req, res) => {
             newColumnsAdded.push(header);
           }
         } catch (error) {
-          console.error(`Error adding column ${header}:`, error);
+          console.error('Error adding column ' + header + ':', error);
         }
       }
     }
@@ -311,7 +299,7 @@ app.post('/api/import/paste', (req, res) => {
         });
 
         if (!rowData.item) {
-          errors.push(`Row missing item code: ${line}`);
+          errors.push('Row missing item code: ' + line);
           continue;
         }
 
@@ -328,7 +316,7 @@ app.post('/api/import/paste', (req, res) => {
         
         imported++;
       } catch (error) {
-        errors.push(`Error importing line: ${error.message}`);
+        errors.push('Error importing line: ' + error.message);
       }
     }
 
@@ -346,14 +334,12 @@ app.post('/api/import/paste', (req, res) => {
   }
 });
 
-// Simplified file import endpoint (paste Excel data as text)
 app.post('/api/import/file', (req, res) => {
   res.status(501).json({ 
     error: 'File upload temporarily disabled. Please copy data from Excel and use paste import instead.' 
   });
 });
 
-// Export data
 app.get('/api/export/:format', (req, res) => {
   const format = req.params.format.toLowerCase();
   
@@ -392,122 +378,12 @@ app.get('/api/export/:format', (req, res) => {
   }
 });
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
-// Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log('Database ready for connections');
-});
-
-process.on('SIGINT', () => {
-  console.log('Shutting down gracefully...');
-  process.exit(0);
-});)) {$')) {
-              value = value.substring(1);
-            }
-            
-            if (['onhand', 'committed', 'onorder', 'unit_price'].includes(header)) {
-              value = parseFloat(value) || 0;
-            }
-            
-            rowData[header] = value;
-          }
-        });
-
-        if (!rowData.item) {
-          errors.push(`Row missing item code: ${line}`);
-          continue;
-        }
-
-        const now = new Date().toISOString();
-        rowData.updated_at = now;
-        
-        const existingIndex = products.findIndex(p => p.item === rowData.item);
-        if (existingIndex >= 0) {
-          products[existingIndex] = { ...products[existingIndex], ...rowData };
-        } else {
-          rowData.created_at = now;
-          products.push(rowData);
-        }
-        
-        imported++;
-      } catch (error) {
-        errors.push(`Error importing line: ${error.message}`);
-      }
-    }
-
-    writeProducts(products);
-
-    res.json({
-      message: 'Import completed',
-      imported,
-      errors: errors.length > 0 ? errors : undefined,
-      newColumnsAdded
-    });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Simplified file import endpoint (paste Excel data as text)
-app.post('/api/import/file', (req, res) => {
-  res.status(501).json({ 
-    error: 'File upload temporarily disabled. Please copy data from Excel and use paste import instead.' 
-  });
-});
-
-// Export data
-app.get('/api/export/:format', (req, res) => {
-  const format = req.params.format.toLowerCase();
-  
-  try {
-    const products = readProducts();
-
-    if (format === 'json') {
-      res.setHeader('Content-Disposition', 'attachment; filename=products.json');
-      res.setHeader('Content-Type', 'application/json');
-      res.json(products);
-    } else if (format === 'csv') {
-      const ws = xlsx.utils.json_to_sheet(products);
-      const wb = xlsx.utils.book_new();
-      xlsx.utils.book_append_sheet(wb, ws, 'Products');
-      
-      const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'csv' });
-      
-      res.setHeader('Content-Disposition', 'attachment; filename=products.csv');
-      res.setHeader('Content-Type', 'text/csv');
-      res.send(buffer);
-    } else if (format === 'excel') {
-      const ws = xlsx.utils.json_to_sheet(products);
-      const wb = xlsx.utils.book_new();
-      xlsx.utils.book_append_sheet(wb, ws, 'Products');
-      
-      const buffer = xlsx.write(wb, { type: 'buffer', bookType: 'xlsx' });
-      
-      res.setHeader('Content-Disposition', 'attachment; filename=products.xlsx');
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      res.send(buffer);
-    } else {
-      res.status(400).json({ error: 'Unsupported format' });
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
-
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log('Server running on port ' + PORT);
   console.log('Database ready for connections');
 });
 
