@@ -3,205 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ecommerce Product Database Manager</title>
+    <title>Product Database</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            margin: 20px;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: #333;
             min-height: 100vh;
         }
-
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
+            background: white;
             padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-
         .header {
-            background: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .header h1 {
-            color: #1e3c72;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
-        .actions {
-            background: #fff;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .actions h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        .action-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #1e3c72, #2a5298);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(45deg, #2a5298, #1e3c72);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(45deg, #6c757d, #495057);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(45deg, #495057, #6c757d);
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: linear-gradient(45deg, #dc3545, #c82333);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: linear-gradient(45deg, #c82333, #dc3545);
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(45deg, #20c997, #28a745);
-            transform: translateY(-2px);
-        }
-
-        .edit-btn, .delete-btn {
-            padding: 6px 10px;
-            margin: 2px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .edit-btn {
             background: #1e3c72;
             color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
         }
-
-        .edit-btn:hover {
+        .btn {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover {
             background: #2a5298;
         }
-
-        .delete-btn {
+        .btn-danger {
             background: #dc3545;
-            color: white;
         }
-
-        .delete-btn:hover {
-            background: #c82333;
+        .btn-success {
+            background: #28a745;
         }
-
-        .import-section {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-            border: 1px solid #dee2e6;
-        }
-
-        .import-section h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .table-container {
-            background: #fff;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            overflow-x: auto;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px 0;
         }
-
         th, td {
-            padding: 12px;
+            border: 1px solid #ddd;
+            padding: 8px;
             text-align: left;
-            border-bottom: 1px solid #dee2e6;
-            white-space: nowrap;
         }
-
         th {
-            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            background: #1e3c72;
             color: white;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
         }
-
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -211,259 +69,101 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
         }
-
         .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
         }
-
+        .form-group {
+            margin: 10px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .paste-area {
+            width: 100%;
+            height: 150px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
         .close {
-            color: #999;
+            color: #aaa;
             float: right;
             font-size: 28px;
             font-weight: bold;
             cursor: pointer;
-            line-height: 1;
         }
-
         .close:hover {
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #dee2e6;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #1e3c72;
-            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .file-input {
-            border: 2px dashed #dee2e6;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px;
-            margin: 10px 0;
-            transition: border-color 0.3s ease;
-        }
-
-        .file-input:hover {
-            border-color: #1e3c72;
-        }
-
-        .paste-area {
-            width: 100%;
-            min-height: 150px;
-            padding: 15px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            resize: vertical;
-        }
-
-        .paste-area:focus {
-            outline: none;
-            border-color: #1e3c72;
-            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
-        }
-
-        .message {
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
-            font-weight: 500;
-            display: none;
-        }
-
-        .message.success {
-            background-color: #d1edff;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-        }
-
-        .stat-card {
-            background: linear-gradient(45deg, #1e3c72, #2a5298);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            flex: 1;
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .stat-card p {
-            opacity: 0.9;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .action-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .btn {
-                justify-content: center;
-                margin-bottom: 10px;
-            }
-            
-            table {
-                font-size: 12px;
-            }
-            
-            th, td {
-                padding: 8px 4px;
-            }
+            color: black;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛍️ Ecommerce Product Database</h1>
-            <p>Manage your inventory with dynamic vendor integration and powerful import/export features</p>
+            <h1>🛍️ Product Database Manager</h1>
+            <p>Manage your inventory with ease</p>
         </div>
 
         <div id="message" class="message"></div>
 
-        <div class="actions">
-            <h2>Quick Actions</h2>
-            
-            <div class="action-row">
-                <button class="btn btn-primary" onclick="openModal()">
-                    ➕ Add New Product
-                </button>
-                <button class="btn btn-secondary" onclick="loadSampleData()">
-                    📋 Load Sample Data
-                </button>
-                <button class="btn btn-success" onclick="loadProducts()">
-                    🔄 Refresh
-                </button>
-            </div>
-
-            <div class="import-section">
-                <h3>📥 Import Data</h3>
-                
-                <div class="action-row">
-                    <div class="file-input">
-                        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="margin-bottom: 10px;">
-                        <button class="btn btn-primary" onclick="importFromFile()">
-                            📂 Import Excel/CSV File
-                        </button>
-                    </div>
-                </div>
-
-                <div style="margin: 20px 0;">
-                    <label for="pasteData"><strong>Or paste tab-separated data:</strong></label>
-                    <textarea id="pasteData" class="paste-area" placeholder="Paste your tab-separated data here (e.g., from Excel copy/paste)..."></textarea>
-                    <button class="btn btn-primary" onclick="importFromPaste()" style="margin-top: 10px;">
-                        📋 Import Pasted Data
-                    </button>
-                </div>
-            </div>
-
-            <div class="import-section">
-                <h3>📤 Export Data</h3>
-                <div class="action-row">
-                    <button class="btn btn-success" onclick="exportData('json')">
-                        📄 Export JSON
-                    </button>
-                    <button class="btn btn-success" onclick="exportData('csv')">
-                        📊 Export CSV
-                    </button>
-                    <button class="btn btn-success" onclick="exportData('excel')">
-                        📈 Export Excel
-                    </button>
-                </div>
-            </div>
+        <div style="margin: 20px 0;">
+            <button class="btn" onclick="testConnection()">🔧 Test API</button>
+            <button class="btn" onclick="loadProducts()">🔄 Refresh</button>
+            <button class="btn" onclick="openAddModal()">➕ Add Product</button>
+            <button class="btn" onclick="loadSampleData()">📋 Load Sample</button>
+            <button class="btn btn-success" onclick="exportData('json')">📄 Export JSON</button>
         </div>
 
-        <div class="table-container">
-            <div class="stats">
-                <div class="stat-card">
-                    <h3 id="productCount">0</h3>
-                    <p>Total Products</p>
-                </div>
-            </div>
+        <div style="margin: 20px 0;">
+            <h3>Import Data (Copy/Paste)</h3>
+            <textarea class="paste-area" id="pasteData" placeholder="Paste your tab-separated data here..."></textarea>
+            <button class="btn" onclick="importPastedData()">📥 Import Data</button>
+        </div>
 
+        <div>
+            <p><strong>Product Count:</strong> <span id="productCount">0</span></p>
             <table id="productsTable">
                 <thead>
                     <tr>
                         <th>Actions</th>
                         <th>Item</th>
                         <th>Description</th>
-                        <th>Grp/Sect</th>
+                        <th>Group</th>
                         <th>On Hand</th>
-                        <th>U/M</th>
-                        <th>Committed</th>
-                        <th>On Order</th>
-                        <th>Unit Price</th>
-                        <th>U/M2</th>
+                        <th>Unit</th>
+                        <th>Price</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -473,1190 +173,323 @@
     </div>
 
     <!-- Modal -->
-    <div id="modal" class="modal">
+    <div id="productModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Add New Product</h2>
+            <h2 id="modalTitle">Add Product</h2>
             <form id="productForm">
                 <div class="form-group">
-                    <label for="item">Item Code:</label>
-                    <input type="text" id="item" name="item" maxlength="16" required>
+                    <label>Item Code:</label>
+                    <input type="text" name="item" required maxlength="16">
                 </div>
                 <div class="form-group">
-                    <label for="description">Description:</label>
-                    <textarea id="description" name="description" rows="2"></textarea>
+                    <label>Description:</label>
+                    <textarea name="description" rows="2"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="grp_sect">Group/Section:</label>
-                    <input type="text" id="grp_sect" name="grp_sect" maxlength="6">
+                    <label>Group/Section:</label>
+                    <input type="text" name="grp_sect" maxlength="6">
                 </div>
                 <div class="form-group">
-                    <label for="onhand">On Hand:</label>
-                    <input type="number" id="onhand" name="onhand" step="0.0001" min="0">
+                    <label>On Hand:</label>
+                    <input type="number" name="onhand" step="0.0001" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="um">Unit Measure:</label>
-                    <input type="text" id="um" name="um" maxlength="6">
+                    <label>Unit:</label>
+                    <input type="text" name="um" maxlength="6">
                 </div>
                 <div class="form-group">
-                    <label for="committed">Committed:</label>
-                    <input type="number" id="committed" name="committed" step="0.0001" min="0">
+                    <label>Committed:</label>
+                    <input type="number" name="committed" step="0.0001" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="onorder">On Order:</label>
-                    <input type="number" id="onorder" name="onorder" step="0.0001" min="0">
+                    <label>On Order:</label>
+                    <input type="number" name="onorder" step="0.0001" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="unit_price">Unit Price:</label>
-                    <input type="number" id="unit_price" name="unit_price" step="0.0001" min="0">
+                    <label>Unit Price:</label>
+                    <input type="number" name="unit_price" step="0.0001" min="0">
                 </div>
                 <div class="form-group">
-                    <label for="um2">Unit Measure 2:</label>
-                    <input type="text" id="um2" name="um2" maxlength="6">
+                    <label>Unit 2:</label>
+                    <input type="text" name="um2" maxlength="6">
                 </div>
-                <div class="action-row">
-                    <button type="button" class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
+                <div style="margin-top: 20px;">
+                    <button type="button" class="btn" onclick="saveProduct()">💾 Save</button>
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">❌ Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // API base URL - uses same domain as frontend
-        const API_BASE = '';
+        // Global variables
+        let products = [];
+        let editingItem = null;
 
-        // Column definitions
-        let allColumns = {};
+        // Test API connection
+        function testConnection() {
+            console.log('Testing API connection...');
+            
+            fetch('/health')
+                .then(response => {
+                    console.log('Health response:', response);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Health data:', data);
+                    showMessage('API Connection: SUCCESS! ' + JSON.stringify(data), 'success');
+                })
+                .catch(error => {
+                    console.error('API Test failed:', error);
+                    showMessage('API Connection FAILED: ' + error.message, 'error');
+                });
+        }
+
+        // Load products
+        function loadProducts() {
+            console.log('Loading products...');
+            
+            fetch('/api/products')
+                .then(response => {
+                    console.log('Products response:', response);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Products data:', data);
+                    products = data;
+                    displayProducts();
+                    showMessage('Products loaded: ' + data.length + ' items', 'success');
+                })
+                .catch(error => {
+                    console.error('Load products failed:', error);
+                    showMessage('Failed to load products: ' + error.message, 'error');
+                });
+        }
+
+        // Display products in table
+        function displayProducts() {
+            const tbody = document.querySelector('#productsTable tbody');
+            tbody.innerHTML = '';
+
+            products.forEach(product => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>
+                        <button class="btn" onclick="editProduct('${product.item}')">✏️</button>
+                        <button class="btn btn-danger" onclick="deleteProduct('${product.item}')">🗑️</button>
+                    </td>
+                    <td>${product.item || ''}</td>
+                    <td>${product.description || ''}</td>
+                    <td>${product.grp_sect || ''}</td>
+                    <td>${product.onhand || '0'}</td>
+                    <td>${product.um || ''}</td>
+                    <td>$${(product.unit_price || 0).toFixed(4)}</td>
+                `;
+            });
+
+            document.getElementById('productCount').textContent = products.length;
+        }
+
+        // Open add modal
+        function openAddModal() {
+            editingItem = null;
+            document.getElementById('modalTitle').textContent = 'Add New Product';
+            document.getElementById('productForm').reset();
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        // Edit product
+        function editProduct(itemCode) {
+            const product = products.find(p => p.item === itemCode);
+            if (!product) {
+                showMessage('Product not found', 'error');
+                return;
+            }
+
+            editingItem = itemCode;
+            document.getElementById('modalTitle').textContent = 'Edit Product';
+            
+            const form = document.getElementById('productForm');
+            form.item.value = product.item || '';
+            form.description.value = product.description || '';
+            form.grp_sect.value = product.grp_sect || '';
+            form.onhand.value = product.onhand || '';
+            form.um.value = product.um || '';
+            form.committed.value = product.committed || '';
+            form.onorder.value = product.onorder || '';
+            form.unit_price.value = product.unit_price || '';
+            form.um2.value = product.um2 || '';
+
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        // Save product
+        function saveProduct() {
+            const form = document.getElementById('productForm');
+            const formData = new FormData(form);
+            
+            const productData = {};
+            for (let [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    if (['onhand', 'committed', 'onorder', 'unit_price'].includes(key)) {
+                        productData[key] = parseFloat(value) || 0;
+                    } else {
+                        productData[key] = value.trim();
+                    }
+                }
+            }
+
+            if (!productData.item) {
+                showMessage('Item code is required', 'error');
+                return;
+            }
+
+            fetch('/api/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(productData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage('Error: ' + data.error, 'error');
+                } else {
+                    showMessage(data.message, 'success');
+                    closeModal();
+                    loadProducts();
+                }
+            })
+            .catch(error => {
+                showMessage('Save failed: ' + error.message, 'error');
+            });
+        }
+
+        // Delete product
+        function deleteProduct(itemCode) {
+            if (!confirm('Delete product ' + itemCode + '?')) {
+                return;
+            }
+
+            fetch('/api/products/' + encodeURIComponent(itemCode), {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage('Error: ' + data.error, 'error');
+                } else {
+                    showMessage(data.message, 'success');
+                    loadProducts();
+                }
+            })
+            .catch(error => {
+                showMessage('Delete failed: ' + error.message, 'error');
+            });
+        }
+
+        // Load sample data
+        function loadSampleData() {
+            const sampleData = [
+                { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600, um: "EA", committed: 0, onorder: 0, unit_price: 0.2500, um2: "EA" },
+                { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900, um: "EA", committed: 500, onorder: 0, unit_price: 0.6402, um2: "EA" },
+                { item: "CG-49767", description: "5 INCH 220GRIT PSA DISC", grp_sect: "1/3", onhand: 900, um: "EA", committed: 0, onorder: 0, unit_price: 0.2300, um2: "EA" }
+            ];
+
+            let saved = 0;
+            sampleData.forEach(product => {
+                fetch('/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(product)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    saved++;
+                    if (saved === sampleData.length) {
+                        showMessage('Sample data loaded!', 'success');
+                        loadProducts();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving sample:', error);
+                });
+            });
+        }
+
+        // Import pasted data
+        function importPastedData() {
+            const data = document.getElementById('pasteData').value.trim();
+            if (!data) {
+                showMessage('Please paste some data first', 'error');
+                return;
+            }
+
+            fetch('/api/import/paste', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    data: data,
+                    delimiter: '\t' 
+                })
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    showMessage('Import error: ' + result.error, 'error');
+                } else {
+                    showMessage('Import completed! ' + result.imported + ' products imported.', 'success');
+                    document.getElementById('pasteData').value = '';
+                    loadProducts();
+                }
+            })
+            .catch(error => {
+                showMessage('Import failed: ' + error.message, 'error');
+            });
+        }
+
+        // Export data
+        function exportData(format) {
+            window.open('/api/export/' + format, '_blank');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('productModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, initializing...');
-            loadColumns();
+            console.log('Page loaded, testing API...');
+            testConnection();
             loadProducts();
         });
-
-        // Test function to verify API connection
-        async function testAPI() {
-            try {
-                console.log('Testing API connection...');
-                const response = await fetch('/health');
-                console.log('Health check response:', response);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                console.log('API Response:', data);
-                showMessage('API is working! ' + JSON.stringify(data), 'success');
-                return true;
-            } catch (error) {
-                console.error('API Test failed:', error);
-                showMessage('API Error: ' + error.message, 'error');
-                return false;
-            }
-        }
-
-        // Load column definitions
-        async function loadColumns() {
-            try {
-                console.log('Loading columns...');
-                const response = await fetch(`${API_BASE}/api/columns`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                console.log('Columns loaded:', data);
-                allColumns = data.all;
-                updateTableHeaders();
-            } catch (error) {
-                console.error('Error loading columns:', error);
-                showMessage('Error loading columns: ' + error.message, 'error');
-            }
-        }
-
-        // Update table headers based on available columns
-        function updateTableHeaders() {
-            const thead = document.querySelector('#productsTable thead tr');
-            if (!thead) {
-                console.error('Table header not found');
-                return;
-            }
-            
-            thead.innerHTML = '<th>Actions</th>';
-            
-            Object.keys(allColumns).forEach(column => {
-                const th = document.createElement('th');
-                th.textContent = column.replace(/_/g, ' ').toUpperCase();
-                thead.appendChild(th);
-            });
-            
-            console.log('Table headers updated');
-        }
-
-        // Load products from backend
-        async function loadProducts() {
-            try {
-                console.log('Loading products...');
-                const response = await fetch(`${API_BASE}/api/products`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const products = await response.json();
-                console.log('Products loaded:', products);
-                displayProducts(products);
-            } catch (error) {
-                console.error('Error loading products:', error);
-                showMessage('Error loading products: ' + error.message, 'error');
-            }
-        }
-
-        // Display products in table
-        function displayProducts(products) {
-            const tbody = document.querySelector('#productsTable tbody');
-            if (!tbody) {
-                console.error('Table body not found');
-                return;
-            }
-            
-            tbody.innerHTML = '';
-
-            products.forEach(product => {
-                const row = document.createElement('tr');
-                
-                // Actions cell
-                const actionsCell = document.createElement('td');
-                actionsCell.innerHTML = `
-                    <button onclick="editProduct('${product.item}')" class="edit-btn" title="Edit">✏️</button>
-                    <button onclick="deleteProduct('${product.item}')" class="delete-btn" title="Delete">🗑️</button>
-                `;
-                row.appendChild(actionsCell);
-
-                // Data cells based on available columns
-                Object.keys(allColumns).forEach(column => {
-                    const cell = document.createElement('td');
-                    let value = product[column] || '';
-                    
-                    // Format specific columns
-                    if (column === 'unit_price' && value) {
-                        value = '
-            const sampleData = [
-                { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2500, um2: "EA" },
-                { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 500.0000, onorder: 0.0000, unit_price: 0.6402, um2: "EA" },
-                { item: "CG-49767", description: "5\" 220GRIT PSA DISC", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" },
-                { item: "CG-49800", description: "5\" PSA 320G DWT", grp_sect: "1/3", onhand: 800.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" },
-                { item: "CG-49798", description: "5 240GRIT GOLD PSA DISC", grp_sect: "1/3", onhand: 700.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2100, um2: "EA" }
-            ];
-
-            // Save sample data via API
-            sampleData.forEach(async (product) => {
-                try {
-                    await fetch(`${API_BASE}/api/products`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(product)
-                    });
-                } catch (error) {
-                    console.error('Error saving sample product:', error);
-                }
-            });
-
-            // Reload products after saving sample data
-            setTimeout(() => {
-                loadProducts();
-                showMessage('Sample data loaded successfully!', 'success');
-            }, 1000);
-        }
-
-        // Load products from backend
-        async function loadProducts() {
-            try {
-                const response = await fetch(`${API_BASE}/api/products`);
-                const products = await response.json();
-                displayProducts(products);
-            } catch (error) {
-                console.error('Error loading products:', error);
-                showMessage('Error loading products', 'error');
-            }
-        }
-
-        // Display products in table
-        function displayProducts(products) {
-            const tbody = document.querySelector('#productsTable tbody');
-            tbody.innerHTML = '';
-
-            products.forEach(product => {
-                const row = document.createElement('tr');
-                
-                // Actions cell
-                const actionsCell = document.createElement('td');
-                actionsCell.innerHTML = `
-                    <button onclick="editProduct('${product.item}')" class="edit-btn" title="Edit">✏️</button>
-                    <button onclick="deleteProduct('${product.item}')" class="delete-btn" title="Delete">🗑️</button>
-                `;
-                row.appendChild(actionsCell);
-
-                // Data cells based on available columns
-                Object.keys(allColumns).forEach(column => {
-                    const cell = document.createElement('td');
-                    let value = product[column] || '';
-                    
-                    // Format specific columns
-                    if (column === 'unit_price' && value) {
-                        value = ' + parseFloat(value).toFixed(4);
-                    } else if (['onhand', 'committed', 'onorder'].includes(column) && value) {
-                        value = parseFloat(value).toFixed(4);
-                    }
-                    
-                    cell.textContent = value;
-                    row.appendChild(cell);
-                });
-
-                tbody.appendChild(row);
-            });
-
-            // Update product count
-            document.getElementById('productCount').textContent = `${products.length}`;
-        }
-
-        // Open new product modal
-        function openModal() {
-            // Generate form fields based on available columns
-            const formContainer = document.getElementById('productForm');
-            formContainer.innerHTML = '';
-            
-            Object.keys(allColumns).forEach(column => {
-                const div = document.createElement('div');
-                div.className = 'form-group';
-                
-                const label = document.createElement('label');
-                label.textContent = column.replace(/_/g, ' ').toUpperCase() + ':';
-                label.setAttribute('for', column);
-                
-                let input;
-                if (['onhand', 'committed', 'onorder', 'unit_price'].includes(column)) {
-                    input = document.createElement('input');
-                    input.type = 'number';
-                    input.step = '0.0001';
-                    input.min = '0';
-                } else if (column === 'description') {
-                    input = document.createElement('textarea');
-                    input.rows = 2;
-                } else {
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    if (column === 'item') {
-                        input.maxLength = 16;
-                        input.required = true;
-                    } else if (['grp_sect', 'um', 'um2'].includes(column)) {
-                        input.maxLength = 6;
-                    }
-                }
-                
-                input.name = column;
-                input.id = column;
-                
-                div.appendChild(label);
-                div.appendChild(input);
-                formContainer.appendChild(div);
-            });
-            
-            // Add save and cancel buttons
-            const buttonDiv = document.createElement('div');
-            buttonDiv.className = 'action-row';
-            buttonDiv.innerHTML = `
-                <button type="button" class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
-            `;
-            formContainer.appendChild(buttonDiv);
-            
-            document.getElementById('modalTitle').textContent = 'Add New Product';
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        // Close modal
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        // Save product
-        async function saveProduct() {
-            const formData = new FormData(document.getElementById('productForm'));
-            const data = {};
-            
-            // Convert FormData to object, handling all columns
-            for (const [key, value] of formData.entries()) {
-                if (value.trim() !== '') {
-                    // Convert numeric fields
-                    if (['onhand', 'committed', 'onorder', 'unit_price'].includes(key)) {
-                        data[key] = parseFloat(value) || 0;
-                    } else {
-                        data[key] = value.trim();
-                    }
-                }
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/products`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    showMessage(result.message, 'success');
-                    closeModal();
-                    loadProducts();
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error saving product:', error);
-                showMessage('Error saving product', 'error');
-            }
-        }
-
-        // Edit product
-        async function editProduct(item) {
-            try {
-                const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`);
-                const product = await response.json();
-                
-                if (response.ok) {
-                    // Populate form with product data
-                    const form = document.getElementById('productForm');
-                    
-                    // Clear form first
-                    form.reset();
-                    
-                    // Fill in available data
-                    Object.keys(allColumns).forEach(column => {
-                        const input = form.querySelector(`[name="${column}"]`);
-                        if (input && product[column] !== undefined) {
-                            input.value = product[column];
-                        }
-                    });
-                    
-                    document.getElementById('modalTitle').textContent = 'Edit Product';
-                    document.getElementById('modal').style.display = 'block';
-                } else {
-                    showMessage(product.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error loading product:', error);
-                showMessage('Error loading product', 'error');
-            }
-        }
-
-        // Delete product
-        async function deleteProduct(item) {
-            if (confirm(`Are you sure you want to delete product ${item}?`)) {
-                try {
-                    const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`, {
-                        method: 'DELETE'
-                    });
-
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        showMessage(result.message, 'success');
-                        loadProducts();
-                    } else {
-                        showMessage(result.error, 'error');
-                    }
-                } catch (error) {
-                    console.error('Error deleting product:', error);
-                    showMessage('Error deleting product', 'error');
-                }
-            }
-        }
-
-        // Import from paste
-        async function importFromPaste() {
-            const data = document.getElementById('pasteData').value.trim();
-            if (!data) {
-                showMessage('Please paste some data first', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/import/paste`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        data: data,
-                        delimiter: '\t' 
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = `Import completed! ${result.imported} products imported.`;
-                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
-                        message += ` New columns added: ${result.newColumnsAdded.join(', ')}`;
-                    }
-                    if (result.errors && result.errors.length > 0) {
-                        message += ` ${result.errors.length} errors occurred.`;
-                        console.log('Import errors:', result.errors);
-                    }
-                    showMessage(message, 'success');
-                    document.getElementById('pasteData').value = '';
-                    loadProducts();
-                    loadColumns(); // Refresh columns in case new ones were added
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error importing data:', error);
-                showMessage('Error importing data', 'error');
-            }
-        }
-
-        // Import from file
-        async function importFromFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                showMessage('Please select a file first', 'error');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                const response = await fetch(`${API_BASE}/api/import/file`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = `Import completed! ${result.imported} products imported.`;
-                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
-                        message += ` New columns added: ${result.newColumnsAdded.join(', ')}`;
-                    }
-                    if (result.errors && result.errors.length > 0) {
-                        message += ` ${result.errors.length} errors occurred.`;
-                        console.log('Import errors:', result.errors);
-                    }
-                    showMessage(message, 'success');
-                    fileInput.value = '';
-                    loadProducts();
-                    loadColumns(); // Refresh columns in case new ones were added
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error importing file:', error);
-                showMessage('Error importing file', 'error');
-            }
-        }
-
-        // Export data
-        function exportData(format) {
-            window.open(`${API_BASE}/api/export/${format}`, '_blank');
-        }
-
-        // Show message
-        function showMessage(text, type = 'success') {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-    </script>
-</body>
-</html> + parseFloat(value).toFixed(4);
-                    } else if (['onhand', 'committed', 'onorder'].includes(column) && value) {
-                        value = parseFloat(value).toFixed(4);
-                    }
-                    
-                    cell.textContent = value;
-                    row.appendChild(cell);
-                });
-
-                tbody.appendChild(row);
-            });
-
-            // Update product count
-            const countElement = document.getElementById('productCount');
-            if (countElement) {
-                countElement.textContent = `${products.length}`;
-            }
-        }
-
-        // Load and display sample data
-        function loadSampleData() {
-            const sampleData = [
-                { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2500, um2: "EA" },
-                { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 500.0000, onorder: 0.0000, unit_price: 0.6402, um2: "EA" },
-                { item: "CG-49767", description: "5\" 220GRIT PSA DISC", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" }
-            ];
-
-            // Save sample data via API
-            let saved = 0;
-            sampleData.forEach(async (product) => {
-                try {
-                    await fetch(`${API_BASE}/api/products`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(product)
-                    });
-                    saved++;
-                    if (saved === sampleData.length) {
-                        setTimeout(() => {
-                            loadProducts();
-                            showMessage('Sample data loaded successfully!', 'success');
-                        }, 1000);
-                    }
-                } catch (error) {
-                    console.error('Error saving sample product:', error);
-                }
-            });
-        }
-
-        // Open new product modal
-        function openModal() {
-            // Generate form fields based on available columns
-            const formContainer = document.getElementById('productForm');
-            if (!formContainer) {
-                console.error('Product form not found');
-                return;
-            }
-            
-            formContainer.innerHTML = '';
-            
-            Object.keys(allColumns).forEach(column => {
-                const div = document.createElement('div');
-                div.className = 'form-group';
-                
-                const label = document.createElement('label');
-                label.textContent = column.replace(/_/g, ' ').toUpperCase() + ':';
-                label.setAttribute('for', column);
-                
-                let input;
-                if (['onhand', 'committed', 'onorder', 'unit_price'].includes(column)) {
-                    input = document.createElement('input');
-                    input.type = 'number';
-                    input.step = '0.0001';
-                    input.min = '0';
-                } else if (column === 'description') {
-                    input = document.createElement('textarea');
-                    input.rows = 2;
-                } else {
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    if (column === 'item') {
-                        input.maxLength = 16;
-                        input.required = true;
-                    } else if (['grp_sect', 'um', 'um2'].includes(column)) {
-                        input.maxLength = 6;
-                    }
-                }
-                
-                input.name = column;
-                input.id = column;
-                
-                div.appendChild(label);
-                div.appendChild(input);
-                formContainer.appendChild(div);
-            });
-            
-            // Add save and cancel buttons
-            const buttonDiv = document.createElement('div');
-            buttonDiv.className = 'action-row';
-            buttonDiv.innerHTML = `
-                <button type="button" class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
-            `;
-            formContainer.appendChild(buttonDiv);
-            
-            document.getElementById('modalTitle').textContent = 'Add New Product';
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        // Close modal
-        function closeModal() {
-            const modal = document.getElementById('modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // Save product
-        async function saveProduct() {
-            const form = document.getElementById('productForm');
-            if (!form) {
-                console.error('Product form not found');
-                return;
-            }
-            
-            const formData = new FormData(form);
-            const data = {};
-            
-            // Convert FormData to object
-            for (const [key, value] of formData.entries()) {
-                if (value.trim() !== '') {
-                    // Convert numeric fields
-                    if (['onhand', 'committed', 'onorder', 'unit_price'].includes(key)) {
-                        data[key] = parseFloat(value) || 0;
-                    } else {
-                        data[key] = value.trim();
-                    }
-                }
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/products`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    showMessage(result.message, 'success');
-                    closeModal();
-                    loadProducts();
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error saving product:', error);
-                showMessage('Error saving product: ' + error.message, 'error');
-            }
-        }
-
-        // Edit product
-        async function editProduct(item) {
-            try {
-                const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`);
-                const product = await response.json();
-                
-                if (response.ok) {
-                    // First open the modal to generate form fields
-                    openModal();
-                    
-                    // Wait a bit for the form to be created
-                    setTimeout(() => {
-                        // Fill in available data
-                        Object.keys(allColumns).forEach(column => {
-                            const input = document.querySelector(`[name="${column}"]`);
-                            if (input && product[column] !== undefined) {
-                                input.value = product[column];
-                            }
-                        });
-                        
-                        document.getElementById('modalTitle').textContent = 'Edit Product';
-                    }, 100);
-                } else {
-                    showMessage(product.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error loading product:', error);
-                showMessage('Error loading product: ' + error.message, 'error');
-            }
-        }
-
-        // Delete product
-        async function deleteProduct(item) {
-            if (confirm('Are you sure you want to delete product ' + item + '?')) {
-                try {
-                    const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`, {
-                        method: 'DELETE'
-                    });
-
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        showMessage(result.message, 'success');
-                        loadProducts();
-                    } else {
-                        showMessage(result.error, 'error');
-                    }
-                } catch (error) {
-                    console.error('Error deleting product:', error);
-                    showMessage('Error deleting product: ' + error.message, 'error');
-                }
-            }
-        }
-
-        // Import from paste
-        async function importFromPaste() {
-            const pasteArea = document.getElementById('pasteData');
-            if (!pasteArea) {
-                console.error('Paste area not found');
-                return;
-            }
-            
-            const data = pasteArea.value.trim();
-            if (!data) {
-                showMessage('Please paste some data first', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/import/paste`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        data: data,
-                        delimiter: '\t' 
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = 'Import completed! ' + result.imported + ' products imported.';
-                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
-                        message += ' New columns added: ' + result.newColumnsAdded.join(', ');
-                    }
-                    if (result.errors && result.errors.length > 0) {
-                        message += ' ' + result.errors.length + ' errors occurred.';
-                        console.log('Import errors:', result.errors);
-                    }
-                    showMessage(message, 'success');
-                    pasteArea.value = '';
-                    loadProducts();
-                    loadColumns(); // Refresh columns in case new ones were added
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error importing data:', error);
-                showMessage('Error importing data: ' + error.message, 'error');
-            }
-        }
-
-        // Import from file (disabled)
-        function importFromFile() {
-            showMessage('File upload is temporarily disabled. Please copy data from Excel and use paste import instead.', 'error');
-        }
-
-        // Export data
-        function exportData(format) {
-            window.open(`${API_BASE}/api/export/${format}`, '_blank');
-        }
-
-        // Show message
-        function showMessage(text, type = 'success') {
-            const messageDiv = document.getElementById('message');
-            if (messageDiv) {
-                messageDiv.textContent = text;
-                messageDiv.className = 'message ' + type;
-                messageDiv.style.display = 'block';
-                
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            }
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        // Make functions globally available
-        window.loadProducts = loadProducts;
-        window.loadSampleData = loadSampleData;
-        window.openModal = openModal;
-        window.closeModal = closeModal;
-        window.saveProduct = saveProduct;
-        window.editProduct = editProduct;
-        window.deleteProduct = deleteProduct;
-        window.importFromPaste = importFromPaste;
-        window.importFromFile = importFromFile;
-        window.exportData = exportData;
-        window.testAPI = testAPI;
-            const sampleData = [
-                { item: "CG-49779", description: "6 120GRIT PSA DISC", grp_sect: "1/3", onhand: 1600.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2500, um2: "EA" },
-                { item: "CG-48529", description: "4-1/2 X 7/8 Spindle 100 Pack", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 500.0000, onorder: 0.0000, unit_price: 0.6402, um2: "EA" },
-                { item: "CG-49767", description: "5\" 220GRIT PSA DISC", grp_sect: "1/3", onhand: 900.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" },
-                { item: "CG-49800", description: "5\" PSA 320G DWT", grp_sect: "1/3", onhand: 800.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2300, um2: "EA" },
-                { item: "CG-49798", description: "5 240GRIT GOLD PSA DISC", grp_sect: "1/3", onhand: 700.0000, um: "EA", committed: 0.0000, onorder: 0.0000, unit_price: 0.2100, um2: "EA" }
-            ];
-
-            // Save sample data via API
-            sampleData.forEach(async (product) => {
-                try {
-                    await fetch(`${API_BASE}/api/products`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(product)
-                    });
-                } catch (error) {
-                    console.error('Error saving sample product:', error);
-                }
-            });
-
-            // Reload products after saving sample data
-            setTimeout(() => {
-                loadProducts();
-                showMessage('Sample data loaded successfully!', 'success');
-            }, 1000);
-        }
-
-        // Load products from backend
-        async function loadProducts() {
-            try {
-                const response = await fetch(`${API_BASE}/api/products`);
-                const products = await response.json();
-                displayProducts(products);
-            } catch (error) {
-                console.error('Error loading products:', error);
-                showMessage('Error loading products', 'error');
-            }
-        }
-
-        // Display products in table
-        function displayProducts(products) {
-            const tbody = document.querySelector('#productsTable tbody');
-            tbody.innerHTML = '';
-
-            products.forEach(product => {
-                const row = document.createElement('tr');
-                
-                // Actions cell
-                const actionsCell = document.createElement('td');
-                actionsCell.innerHTML = `
-                    <button onclick="editProduct('${product.item}')" class="edit-btn" title="Edit">✏️</button>
-                    <button onclick="deleteProduct('${product.item}')" class="delete-btn" title="Delete">🗑️</button>
-                `;
-                row.appendChild(actionsCell);
-
-                // Data cells based on available columns
-                Object.keys(allColumns).forEach(column => {
-                    const cell = document.createElement('td');
-                    let value = product[column] || '';
-                    
-                    // Format specific columns
-                    if (column === 'unit_price' && value) {
-                        value = ' + parseFloat(value).toFixed(4);
-                    } else if (['onhand', 'committed', 'onorder'].includes(column) && value) {
-                        value = parseFloat(value).toFixed(4);
-                    }
-                    
-                    cell.textContent = value;
-                    row.appendChild(cell);
-                });
-
-                tbody.appendChild(row);
-            });
-
-            // Update product count
-            document.getElementById('productCount').textContent = `${products.length}`;
-        }
-
-        // Open new product modal
-        function openModal() {
-            // Generate form fields based on available columns
-            const formContainer = document.getElementById('productForm');
-            formContainer.innerHTML = '';
-            
-            Object.keys(allColumns).forEach(column => {
-                const div = document.createElement('div');
-                div.className = 'form-group';
-                
-                const label = document.createElement('label');
-                label.textContent = column.replace(/_/g, ' ').toUpperCase() + ':';
-                label.setAttribute('for', column);
-                
-                let input;
-                if (['onhand', 'committed', 'onorder', 'unit_price'].includes(column)) {
-                    input = document.createElement('input');
-                    input.type = 'number';
-                    input.step = '0.0001';
-                    input.min = '0';
-                } else if (column === 'description') {
-                    input = document.createElement('textarea');
-                    input.rows = 2;
-                } else {
-                    input = document.createElement('input');
-                    input.type = 'text';
-                    if (column === 'item') {
-                        input.maxLength = 16;
-                        input.required = true;
-                    } else if (['grp_sect', 'um', 'um2'].includes(column)) {
-                        input.maxLength = 6;
-                    }
-                }
-                
-                input.name = column;
-                input.id = column;
-                
-                div.appendChild(label);
-                div.appendChild(input);
-                formContainer.appendChild(div);
-            });
-            
-            // Add save and cancel buttons
-            const buttonDiv = document.createElement('div');
-            buttonDiv.className = 'action-row';
-            buttonDiv.innerHTML = `
-                <button type="button" class="btn btn-primary" onclick="saveProduct()">💾 Save Product</button>
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">❌ Cancel</button>
-            `;
-            formContainer.appendChild(buttonDiv);
-            
-            document.getElementById('modalTitle').textContent = 'Add New Product';
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        // Close modal
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        // Save product
-        async function saveProduct() {
-            const formData = new FormData(document.getElementById('productForm'));
-            const data = {};
-            
-            // Convert FormData to object, handling all columns
-            for (const [key, value] of formData.entries()) {
-                if (value.trim() !== '') {
-                    // Convert numeric fields
-                    if (['onhand', 'committed', 'onorder', 'unit_price'].includes(key)) {
-                        data[key] = parseFloat(value) || 0;
-                    } else {
-                        data[key] = value.trim();
-                    }
-                }
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/products`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    showMessage(result.message, 'success');
-                    closeModal();
-                    loadProducts();
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error saving product:', error);
-                showMessage('Error saving product', 'error');
-            }
-        }
-
-        // Edit product
-        async function editProduct(item) {
-            try {
-                const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`);
-                const product = await response.json();
-                
-                if (response.ok) {
-                    // Populate form with product data
-                    const form = document.getElementById('productForm');
-                    
-                    // Clear form first
-                    form.reset();
-                    
-                    // Fill in available data
-                    Object.keys(allColumns).forEach(column => {
-                        const input = form.querySelector(`[name="${column}"]`);
-                        if (input && product[column] !== undefined) {
-                            input.value = product[column];
-                        }
-                    });
-                    
-                    document.getElementById('modalTitle').textContent = 'Edit Product';
-                    document.getElementById('modal').style.display = 'block';
-                } else {
-                    showMessage(product.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error loading product:', error);
-                showMessage('Error loading product', 'error');
-            }
-        }
-
-        // Delete product
-        async function deleteProduct(item) {
-            if (confirm(`Are you sure you want to delete product ${item}?`)) {
-                try {
-                    const response = await fetch(`${API_BASE}/api/products/${encodeURIComponent(item)}`, {
-                        method: 'DELETE'
-                    });
-
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        showMessage(result.message, 'success');
-                        loadProducts();
-                    } else {
-                        showMessage(result.error, 'error');
-                    }
-                } catch (error) {
-                    console.error('Error deleting product:', error);
-                    showMessage('Error deleting product', 'error');
-                }
-            }
-        }
-
-        // Import from paste
-        async function importFromPaste() {
-            const data = document.getElementById('pasteData').value.trim();
-            if (!data) {
-                showMessage('Please paste some data first', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${API_BASE}/api/import/paste`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        data: data,
-                        delimiter: '\t' 
-                    })
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = `Import completed! ${result.imported} products imported.`;
-                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
-                        message += ` New columns added: ${result.newColumnsAdded.join(', ')}`;
-                    }
-                    if (result.errors && result.errors.length > 0) {
-                        message += ` ${result.errors.length} errors occurred.`;
-                        console.log('Import errors:', result.errors);
-                    }
-                    showMessage(message, 'success');
-                    document.getElementById('pasteData').value = '';
-                    loadProducts();
-                    loadColumns(); // Refresh columns in case new ones were added
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error importing data:', error);
-                showMessage('Error importing data', 'error');
-            }
-        }
-
-        // Import from file
-        async function importFromFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                showMessage('Please select a file first', 'error');
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-                const response = await fetch(`${API_BASE}/api/import/file`, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = `Import completed! ${result.imported} products imported.`;
-                    if (result.newColumnsAdded && result.newColumnsAdded.length > 0) {
-                        message += ` New columns added: ${result.newColumnsAdded.join(', ')}`;
-                    }
-                    if (result.errors && result.errors.length > 0) {
-                        message += ` ${result.errors.length} errors occurred.`;
-                        console.log('Import errors:', result.errors);
-                    }
-                    showMessage(message, 'success');
-                    fileInput.value = '';
-                    loadProducts();
-                    loadColumns(); // Refresh columns in case new ones were added
-                } else {
-                    showMessage(result.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error importing file:', error);
-                showMessage('Error importing file', 'error');
-            }
-        }
-
-        // Export data
-        function exportData(format) {
-            window.open(`${API_BASE}/api/export/${format}`, '_blank');
-        }
-
-        // Show message
-        function showMessage(text, type = 'success') {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
-            
-            setTimeout(() => {
-                messageDiv.style.display = 'none';
-            }, 5000);
-        }
-
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('modal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
     </script>
 </body>
 </html>
